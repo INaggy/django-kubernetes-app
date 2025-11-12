@@ -6,7 +6,7 @@ metadata:
   labels:
     app: django-app
 spec:
-  replicas: 4 # Множество реплик для балансировки нагрузки
+  replicas: 4
   selector:
     matchLabels:
       app: django-app
@@ -19,9 +19,14 @@ spec:
         prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
+      # ДОБАВЬТЕ ЭТОТ БЛОК ДЛЯ ДОСТУПА К GHCR
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: django-app
-        image: NeverovEgor/django-kubernetes-app:latest
+        image: ghcr.io/neverovegor/django-kubernetes-app:latest
+        # ИЗМЕНИТЕ imagePullPolicy
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         envFrom:
